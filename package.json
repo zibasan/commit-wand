@@ -1,0 +1,70 @@
+{
+  "name": "improve_conv_commit_cli",
+  "private": false,
+  "version": "1.0.0",
+  "description": "A CLI to check and fix Conventional Commits",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "bin": {
+    "improve_conv_commit_cli": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepare": "husky",
+    "prepublishOnly": "pnpm run build",
+    "dev": "tsx src/index.ts",
+    "start": "pnpm check && pnpm build && node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "lint-staged": "lint-staged",
+    "lint": "pnpm biome lint .",
+    "lint@fix": "pnpm biome lint --write .",
+    "format": "pnpm biome format .",
+    "format@fix": "pnpm biome format --write .",
+    "check": "pnpm biome check .",
+    "check@fix": "pnpm biome check --write .",
+    "postbuild": "node -e \"require('fs').chmodSync('dist/index.js', 0o755)\""
+  },
+  "keywords": [
+    "cli",
+    "scaffold",
+    "typescript",
+    "generator"
+  ],
+  "author": "zibasan",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zibasan/improve_conv_commit_CLI.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zibasan/improve_conv_commit_CLI/issues"
+  },
+  "homepage": "https://github.com/zibasan/improve_conv_commit_CLI#readme",
+  "dependencies": {
+    "@commitlint/parse": "^20.5.0",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.3",
+    "enquirer": "^2.4.1",
+    "ora": "^9.3.0",
+    "yargs": "^18.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.9",
+    "@types/node": "^25.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "pnpm biome check --write"
+    ]
+  },
+  "packageManager": "pnpm@10.33.0"
+}
