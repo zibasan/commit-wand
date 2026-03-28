@@ -2,6 +2,7 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
 import { checkCommit } from './commands/check.js';
+import { initHusky } from './commands/init.js';
 
 // SIGINT (Ctrl+C) のハンドリング
 // questionsFunc.ts で発火したシグナルをここで受け止め、安全に終了します。
@@ -18,4 +19,11 @@ program.name('cw').version('1.0.0').description('A CLI to check and fix Conventi
 program.argument('<file>', 'Path to the commit message file').action(async (file) => {
   await checkCommit(file);
 });
+program
+  .command('init')
+  .description('Initialize Husky and setup the commit-msg hook automatically')
+  .action(async () => {
+    await initHusky();
+  });
+
 program.parse(process.argv);

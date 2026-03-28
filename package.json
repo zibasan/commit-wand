@@ -7,10 +7,12 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "bin": {
-    "cw": "./dist/index.js"
+    "cw": "./dist/index.js",
+    "commit-wand": "./dist/index.js"
   },
   "files": [
     "dist",
+    "LICENSE",
     "README.md"
   ],
   "scripts": {
@@ -27,32 +29,35 @@
     "format@fix": "pnpm biome format --write .",
     "check": "pnpm biome check .",
     "check@fix": "pnpm biome check --write .",
-    "postbuild": "node -e \"require('fs').chmodSync('dist/index.js', 0o755)\""
+    "postbuild": "node -e \"import('node:fs').then(fs => fs.chmodSync('dist/index.js', 0o755))\""
   },
   "keywords": [
     "cli",
-    "scaffold",
-    "typescript",
-    "generator"
+    "git",
+    "conventional-commits",
+    "commitlint",
+    "git-hook",
+    "husky",
+    "commit-msg",
+    "interactive"
   ],
   "author": "zibasan",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zibasan/improve_conv_commit_CLI.git"
+    "url": "git+https://github.com/zibasan/commit-wand.git"
   },
   "bugs": {
-    "url": "https://github.com/zibasan/improve_conv_commit_CLI/issues"
+    "url": "https://github.com/zibasan/commit-wand/issues"
   },
-  "homepage": "https://github.com/zibasan/improve_conv_commit_CLI#readme",
+  "homepage": "https://github.com/zibasan/commit-wand#readme",
   "dependencies": {
     "@commitlint/parse": "^20.5.0",
     "chalk": "^5.6.2",
     "commander": "^14.0.3",
     "enquirer": "^2.4.1",
     "log-symbols": "^7.0.1",
-    "ora": "^9.3.0",
-    "yargs": "^18.0.0"
+    "ora": "^9.3.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.9",
