@@ -10,7 +10,7 @@ process.on('SIGINT', () => {
     chalk.bgYellow.black(' CANCELED ') +
       chalk.yellow(' Processing has been canceled. Abort the commit.')
   );
-  process.exit(0);
+  process.exit(1);
 });
 
 const program = new Command();
