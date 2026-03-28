@@ -91,13 +91,72 @@ export async function checkCommit(filePath: string) {
       }
     }
 
+    console.log('\n');
+
+    // 3.5 Adding body message (optional)
+    console.log(
+      chalk.bgBlue.white(' NEXT >> ') +
+        chalk.cyan(' Enter a longer description (body) (optional).') +
+        chalk.gray.italic('\n Press Enter on an empty line to finish.\n')
+    );
+
+    const bodyLines: string[] = [];
+    while (true) {
+      const line = await askInput(`Line ${bodyLines.length + 1}:`, '');
+      if (line === '') {
+        break; // Exit the loop when a blank line is entered
+      }
+      bodyLines.push(line);
+    }
+    const body = bodyLines.join('\n'); // Combine collected lines with newline characters
+    console.log('\n');
+
+    // BREAKING CHANGE
+    const isBreakingChange = await askConfirm('Are there any BREAKING changes?', false);
+    let breakingDesc = '';
+    if (isBreakingChange) {
+      while (true) {
+        breakingDesc = await askInput('Describe the breaking changes:');
+        if (breakingDesc.trim() === '') {
+          console.log(error + chalk.red(' Breaking change description cannot be empty.\n'));
+        } else {
+          break;
+        }
+      }
+    }
+    console.log('\n');
+
+    // Issue reference
+    const issueRef = await askInput(
+      'Does this commit close any issues? (e.g., Closes #123) (optional):',
+      ''
+    );
+
     // 4. Assembling a new message
     const cleanScope = scope.replace(/[()]/g, '').trim();
     const scopeStr = cleanScope ? `(${cleanScope})` : '';
+    const breakingMarker = isBreakingChange ? '!' : '';
 
-    const newMessage = `${customType || selectedType}${scopeStr}: ${subject}`;
+    let newMessage = `${customType || selectedType}${scopeStr}${breakingMarker}: ${subject}`;
 
-    console.log(`\nGenerated message: ${chalk.green(newMessage)}\n`);
+    if (body.trim() !== '') {
+      newMessage += `\n\n${body.trim()}`;
+    }
+
+    // Add footers
+    const footers = [];
+    if (isBreakingChange) {
+      footers.push(`BREAKING CHANGE: ${breakingDesc.trim()}`);
+    }
+    if (issueRef.trim() !== '') {
+      footers.push(issueRef.trim());
+    }
+
+    if (footers.length > 0) {
+      newMessage += `\n\n${footers.join('\n')}`;
+    }
+
+    console.log(`\n${chalk.cyan('Generated message:')} \n${chalk.green.bold(newMessage)}\n`);
 
     // 5. Final confirmation
     const confirm = await askConfirm('Do you want to commit with this message?', true);

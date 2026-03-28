@@ -14,10 +14,7 @@ process.on('SIGINT', () => {
 });
 
 const program = new Command();
-program
-  .name('convcommit')
-  .version('1.0.0')
-  .description('A CLI to check and fix Conventional Commits');
+program.name('cw').version('1.0.0').description('A CLI to check and fix Conventional Commits');
 program.argument('<file>', 'Path to the commit message file').action(async (file) => {
   await checkCommit(file);
 });

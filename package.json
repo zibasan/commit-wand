@@ -1,5 +1,5 @@
 {
-  "name": "improve_conv_commit_cli",
+  "name": "commit-wand",
   "private": false,
   "version": "1.0.0",
   "description": "A CLI to check and fix Conventional Commits",
@@ -7,7 +7,7 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "bin": {
-    "improve_conv_commit_cli": "./dist/index.js"
+    "cw": "./dist/index.js"
   },
   "files": [
     "dist",
