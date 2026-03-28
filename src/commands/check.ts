@@ -2,37 +2,41 @@ import fs from 'node:fs';
 import parse from '@commitlint/parse';
 import chalk from 'chalk';
 import { askConfirm, askInput, selectType } from '../utils/questionFunc.js';
-import { error, success, warn } from '../utils/symbols.js';
+import { error, info, success, warn } from '../utils/symbols.js';
 
 export async function checkCommit(filePath: string) {
   try {
     // 1. Read the file passed from Git (.git/COMMIT_EDITMSG)
-    const message = fs.readFileSync(filePath, 'utf-8').trim();
+    const rawMessage = fs.readFileSync(filePath, 'utf-8');
+    const message = rawMessage
+      .split('\n')
+      .filter((line) => !line.trim().startsWith('#')) // #から始まる行を除外
+      .join('\n')
+      .trim();
 
-    if (message.trim() === '') {
-      console.log(error + chalk.red(' Commit message is empty. This commit will be aborted.'));
-      process.exit(1); // Process end with error (aborts commit)
-    }
+    if (message) {
+      const parsed = await parse(message);
 
-    const parsed = await parse(message);
+      const hasValidStructure = parsed.type !== null && parsed.subject !== null;
+      const isValidType = parsed.type ? /^[a-z]+$/.test(parsed.type) : false;
 
-    const hasValidStructure = parsed.type !== null && parsed.subject !== null;
-    const isValidType = parsed.type ? /^[a-z]+$/.test(parsed.type) : false;
+      if (hasValidStructure && isValidType) {
+        // 2. Check
+        console.log(
+          success + chalk.green(' Commit messages comply with the rules! Continue with the commit.')
+        );
+        process.exit(0); // Successful completion (committed as is)
+      }
 
-    // 2. Check with regular expression
-    if (hasValidStructure && isValidType) {
+      // 3. Display a prompt if the terms are violated
       console.log(
-        success + chalk.green(' Commit messages comply with the rules! Continue with the commit.')
+        warn + chalk.yellow(' The commit message is not compliant with Conventional Commits.')
       );
-      process.exit(0); // Successful completion (committed as is)
+      console.log(chalk.cyan(`Current message: ${message}\n`));
+      console.log(chalk.cyan(`Please create a new commit message.\n`));
+    } else {
+      console.log(info + chalk.blue(" No commit message provided. Let's create one!\n"));
     }
-
-    // 3. Display a prompt if the terms are violated
-    console.log(
-      warn + chalk.yellow(' The commit message is not compliant with Conventional Commits.')
-    );
-    console.log(chalk.cyan(`Current message: ${message}\n`));
-    console.log(chalk.cyan(`Please create a new commit message.\n`));
 
     // Type selection
     const types = [

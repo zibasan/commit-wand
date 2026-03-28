@@ -1,1 +1,3 @@
+echo "hint: Waiting for CLI to review and modify your commit message..."
+exec < /dev/tty
 pnpm dev "$1"
