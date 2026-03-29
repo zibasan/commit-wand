@@ -1,6 +1,7 @@
 # 🪄 commit-wand (cw)
 
 [![npm version](https://img.shields.io/npm/v/commit-wand.svg?color=blue)](https://www.npmjs.com/package/commit-wand)
+[![node version](https://img.shields.io/node/v/commit-wand.svg)](https://www.npmjs.com/package/commit-wand)
 [![npm downloads](https://img.shields.io/npm/dt/commit-wand.svg)](https://www.npmjs.com/package/commit-wand)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm unpacked size](https://img.shields.io/npm/unpacked-size/commit-wand.svg)](https://www.npmjs.com/package/commit-wand)
@@ -20,6 +21,9 @@ Stop wrestling with git hooks that just yell at you. `commit-wand` catches your 
 - **Husky Ready:** Perfectly integrates with `commit-msg` git hooks.
 
 ## 📦 Installation
+
+> [!WARNING]
+> It is **highly** recommended to use `Node.js v22` for commit-wand. It also works on v23 and later, but in that case, if you use `Ctrl+C` to terminate the process during an interactive question, an error message will be displayed due to a known issue in an underlying dependency.
 
 Install `commit-wand` as a development dependency in your project:
 
@@ -41,21 +45,12 @@ bun add -D commit-wand
 
 The best way to use `commit-wand` is by integrating it with [Husky](https://typicode.github.io/husky/) to automatically run on the `commit-msg` hook.
 
-1. Initialize husky (if you haven't already):
+Run the following command to set up the wand:
 
 ```bash
-# Using your package manager's execute command
-
-npx husky init
+# Execute command for your package manager
+npx cw init
 ```
-
-> [!NOTE]
-> If your project does not already have Husky installed, install it and run it.
-
-2. Add `commit-wand` to the `commit-msg` hook:
-   ```bash
-   cw init
-   ```
 
 Now, just run `git commit` as you normally would. If your message is invalid, the wand will appear and guide you!
 
