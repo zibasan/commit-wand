@@ -9,13 +9,19 @@ export async function checkCommit(filePath: string) {
     // 1. Read the file passed from Git (.git/COMMIT_EDITMSG)
     const rawMessage = fs.readFileSync(filePath, 'utf-8');
     const message = rawMessage
-      .split('\n')
-      .filter((line) => !line.trim().startsWith('#')) // #から始まる行を除外
+      .replace(/\r\n/g, '\n') // replace CRLF with LF
+      .split('\n') // split into lines
+      .filter((line) => !line.startsWith('#')) // remove comment lines
       .join('\n')
-      .trim();
+      .trim(); // trim leading/trailing whitespace
+
+    const parserOpts = {
+      headerPattern: /^(\w*)(?:\((.*)\))?(!?): (.*)$/,
+      headerCorrespondence: ['type', 'scope', 'break', 'subject'],
+    };
 
     if (message) {
-      const parsed = await parse(message);
+      const parsed = await parse(message, undefined, parserOpts);
 
       const hasValidStructure = parsed.type !== null && parsed.subject !== null;
       const isValidType = parsed.type ? /^[a-z]+$/.test(parsed.type) : false;
