@@ -23,6 +23,11 @@ export async function initHusky() {
     try {
       // Run asynchronously
       await execAsync('npx husky init', { cwd: targetDir });
+      const preCommitPath = path.join(huskyDir, 'pre-commit');
+
+      if (fs.existsSync(preCommitPath)) {
+        fs.unlinkSync(preCommitPath);
+      }
       spinner.succeed(chalk.green('Husky initialized successfully.'));
     } catch (_e) {
       spinner.fail(
