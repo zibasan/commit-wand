@@ -2,7 +2,11 @@ import * as prompt from '@clack/prompts';
 import chalk from 'chalk';
 import gradient, { mind } from 'gradient-string';
 import { getAIScope } from './utils/ai.js';
+import { getApiKey } from './utils/config.js';
 import { error, info, success, warn } from './utils/symbols.js';
+
+const API_KEY = process.env.CW_GEMINI_API_KEY || getApiKey();
+const isAPIKey: boolean = !!API_KEY;
 
 const handleCancel = () => {
   prompt.cancel(chalk.bgYellow.black(' CANCELED ') + chalk.yellow(' Commit has been aborted.'));
@@ -17,7 +21,7 @@ export async function runCommitMsgPrompt(message: string | null) {
 
   let animationTimer: NodeJS.Timeout | null = null;
 
-  if (process.env.CW_GEMINI_API_KEY) {
+  if (isAPIKey === true) {
     s.start(
       chalk.bgMagenta.white(' INFO ') +
         aiGradient(' Gemini API Key was detected. Start analyzing changes with Gemini...')

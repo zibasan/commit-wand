@@ -3,7 +3,8 @@ import chalk from 'chalk';
 import { Command } from 'commander';
 import { checkCommit } from './commands/check.js';
 import { initHusky } from './commands/init.js';
-import { error } from './utils/symbols.js';
+import { saveApiKey } from './utils/config.js';
+import { error, success } from './utils/symbols.js';
 
 process.on('SIGINT', () => {
   console.log(
@@ -37,6 +38,21 @@ program
   .description('Initialize Husky and setup the commit-msg hook automatically')
   .action(async () => {
     await initHusky();
+  });
+
+const configCmd = program.command('config').description('Manage commit-wand configuration');
+
+configCmd
+  .command('set-key <key>')
+  .description('Set your Gemini API key for AI features')
+  .action((key) => {
+    saveApiKey(key);
+    console.log(success + chalk.green(' API Key has been saved successfully to config.'));
+    console.log(
+      chalk.gray(
+        'You can now use the AI auto-scoping feature without setting environment variables.'
+      )
+    );
   });
 
 program.parse(process.argv);

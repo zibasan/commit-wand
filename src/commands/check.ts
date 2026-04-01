@@ -93,7 +93,8 @@ export async function checkCommit(filePath?: string, options: { noCommit?: boole
     } else {
       try {
         prompt.outro(
-          success + chalk.green('Files were staged and "git commit" will be executed successfully.')
+          success +
+            chalk.green(' Files were staged and "git commit" will be executed successfully.')
         );
         execSync(`git add .`, { stdio: 'inherit' });
         execSync(`git commit -m "${newMessage}"`, { stdio: 'inherit' });

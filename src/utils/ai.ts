@@ -1,9 +1,10 @@
 import { execSync } from 'node:child_process';
 import { GoogleGenAI } from '@google/genai';
+import { getApiKey } from './config.js';
 import { getInferredScope } from './git.js';
 
 // Check if the user has set the key in the environment variable
-const API_KEY = process.env.CW_GEMINI_API_KEY;
+const API_KEY = process.env.CW_GEMINI_API_KEY || getApiKey();
 
 /**
  * A helper function that extracts json from API errors and converts them into highly readable messages.
