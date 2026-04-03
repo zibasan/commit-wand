@@ -15,7 +15,10 @@ process.on('SIGINT', () => {
 });
 
 const program = new Command();
-program.name('cw').version('1.0.21').description('A CLI to check and fix Conventional Commits');
+program
+  .name('commit-wand')
+  .version('2.0.0')
+  .description('A CLI to check and fix Conventional Commits');
 program.argument('[file]', 'Path to the commit message file');
 program.option(
   '--no-commit',
