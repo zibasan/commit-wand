@@ -15,6 +15,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: google-github-actions/release-please-action@v4
+        id: release
         with:
           release-type: node
           target-branch: master
+
+      - uses: actions/checkout@v4
+        if: ${{ steps.release.outputs.release_created }}
+
+      - uses: pnpm/action-setup@v3
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+          cache: "pnpm"
+
+      - name: Install dependencies and Build
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm run build
+
+      - name: Publish to npm
+        if: ${{ steps.release.outputs.release_created }}
+        run: pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
