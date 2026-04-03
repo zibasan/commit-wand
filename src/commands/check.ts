@@ -1,4 +1,4 @@
-import { execSync } from 'node:child_process';
+import { execSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import * as prompt from '@clack/prompts';
@@ -19,7 +19,10 @@ export async function checkCommit(filePath?: string, options: { noCommit?: boole
     const isSpecialGitOperation = isMerge || isRebase || isCherryPick;
 
     if (!isSpecialGitOperation) {
-      const staged = execSync('git diff --cached --name-only', { encoding: 'utf-8' }).trim();
+      const staged = execSync('git diff --cached --name-only', {
+        encoding: 'utf-8',
+        maxBuffer: 10 * 1024 * 1024,
+      }).trim();
       const unstagedTracked = execSync('git diff --name-only', { encoding: 'utf-8' }).trim();
       const untracked = execSync('git ls-files --others --exclude-standard', {
         encoding: 'utf-8',
@@ -224,7 +227,7 @@ export async function checkCommit(filePath?: string, options: { noCommit?: boole
           success +
             chalk.green(' Files were staged and "git commit" will be executed successfully.')
         );
-        execSync(`git commit -m "${newMessage}"`, { stdio: 'inherit' });
+        spawnSync('git', ['commit', '-m', newMessage], { stdio: 'inherit' });
       } catch (_execErr) {
         console.error(error + chalk.red(' Failed to execute git commit.'));
         process.exit(1);

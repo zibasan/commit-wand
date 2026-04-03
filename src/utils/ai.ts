@@ -49,7 +49,11 @@ export async function getAIInference(): Promise<{
   }
 
   try {
-    const diff = execSync('git diff --cached', { encoding: 'utf-8', stdio: 'pipe' });
+    const diff = execSync('git diff --cached', {
+      encoding: 'utf-8',
+      stdio: 'pipe',
+      maxBuffer: 10 * 1024 * 1024,
+    });
     if (!diff.trim()) return { scope: undefined, subject: getInferredSubject(), isAI: false };
 
     const truncatedDiff = diff.length > 3000 ? diff.slice(0, 3000) + '\n...[truncated]' : diff;
