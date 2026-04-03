@@ -1,10 +1,18 @@
 #!/usr/bin/env node
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import chalk from 'chalk';
 import { Command } from 'commander';
 import { checkCommit } from './commands/check.js';
 import { initHusky } from './commands/init.js';
 import { saveApiKey } from './utils/config.js';
 import { error, success } from './utils/symbols.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const pkgPath = path.join(__dirname, '../package.json');
+const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
 
 process.on('SIGINT', () => {
   console.log(
@@ -17,7 +25,7 @@ process.on('SIGINT', () => {
 const program = new Command();
 program
   .name('commit-wand')
-  .version('2.0.0')
+  .version(pkg.version)
   .description('A CLI to check and fix Conventional Commits');
 program.argument('[file]', 'Path to the commit message file');
 program.option(
