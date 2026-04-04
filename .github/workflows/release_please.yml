@@ -34,6 +34,7 @@ jobs:
         with:
           node-version: "22"
           cache: "pnpm"
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies and Build
         if: ${{ steps.release.outputs.release_created }}
