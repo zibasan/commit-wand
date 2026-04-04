@@ -1,6 +1,7 @@
 on:
-  release:
-    types: [created, published]
+  push:
+    tags:
+      - "v*"
 
 name: publish
 
@@ -26,6 +27,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
 
-      - run: npm whoami # デバッグ
+      - run: npm whoami
 
       - run: npm publish --provenance --access public
